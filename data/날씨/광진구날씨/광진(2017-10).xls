@@ -1,0 +1,883 @@
+
+<script type="text/JavaScript">
+	//지도 좌표
+	var MAP_LEFT_LON	= -126.75561;		//좌측 좌표
+	var MAP_TOP_LAT		=  37.70152;		//상단 좌표 (주의, X.Y 좌표와 반대)
+
+	var MAP_RIGHT_LON	= -127.19456;		//우측 좌표
+	var MAP_BOTTOM_LAT	=  37.42336;		//하단 좌표 (주의, X.Y 좌표와 반대)
+	
+	var MAP_SIZE_LON	= MAP_RIGHT_LON - MAP_LEFT_LON;
+	var MAP_SIZE_LAT	= MAP_TOP_LAT  - MAP_BOTTOM_LAT;
+
+	//지도 이미지 크기
+	var MAP_SIZE_X		= 500;
+	var MAP_SIZE_Y		= 398;
+	
+	//아이콘 크기
+	var MAP_ICON_SIZE	= 8;
+	
+	var ImageSrcPath    = "../Images/"+"seoul";
+	var gDefaultSite 	= "1100";
+</script>
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' lang='ko' xml:lang='ko'>
+<head>
+	<meta http-equiv='Content-Type' content='text/html'; charset='euc-kr'/>
+<STYLE type="text/css">
+<!--
+	table.Report			{	width: 100%;	margin: 0px 0px 0px 0px;	word-break: break-all;	font-family: GulimChe;	font-size:10pt;		}
+	table.Report th 		{	border: .5pt solid #000000;	text-align: center;	color: #0088BB;	font-weight: bold;	}
+	table.Report th.RT1		{	background-color: #E1ECFF; 															}
+	table.Report th.RT0	 	{	background-color: #E1CCFF;															}
+
+	table.Report td 		{	border: .5pt solid #000000;															}
+	table.Report td.RL1		{	background-color: #FFFFFF;															}
+	table.Report td.RL2		{	background-color: #FFFFFF;															}
+	
+	table.Report td.RL10 	{	background-color: #FFFFFF;	border-left: 0px solid #FFFFFF;	border-Right: 0px solid #FFFFFF;	}
+	table.Report td.RL1x 	{	background-color: #F7F7F7;	border-left: 0px solid #FFFFFF;										}
+
+	table.Report td.RL20 	{	background-color: #FFFFFF;	border-left: 0px solid #FFFFFF;	border-Right: 0px solid #FFFFFF;	}
+	table.Report td.RL2x 	{	background-color: #F7F7F7;	border-left: 0px solid #FFFFFF;										}
+	
+	table.Report td.RF1		{	background-color: #E1ECFF;	font-weight: bold;	padding: 3px 3px 1px 2px;			}
+	table.Report td.RF2		{	background-color: #E1CCFF;	font-weight: bold;	padding: 3px 3px 1px 2px;			}
+	table.Report td.Date0	{	padding: 0px 0px 0px 0px;	margin: 0px 0px 0px 0px;	height:18px;				}
+
+	.textBlue 	{	color: #0066FF	}
+	.textRed 	{	color: #FF3300	}
+
+	.Date1		{	border-bottom: 1px solid #B5CFE4;	text-align: center;	height: 15px;	padding: 0px 0px 0px 0px;	background-color: #F0F4FC;	color: #0088BB;	line-height: 120%;	font-weight: bold;	}
+	.Week		{	text-align: center;	padding:15px 15px 15px 15px;	}
+-->
+</STYLE>
+</head>
+	
+<BODY>
+<br>일평균 자료 + 기간통계  [ 2017-10]<p>
+
+	<TABLE cellSpacing=0 cellPadding=0 border=0>
+		<TBODY>
+			<!-- REPORT HEADER ----------------------------------------------------------- -->
+			<TR>
+				<TD>
+					<TABLE class=Report cellSpacing=0 cellPadding=0 border=0>
+						<THEAD>
+							<!------------------------------->
+							<tr><th class='RT0' height='18px' nowrap>구 분</th></tr>
+<tr><th class='RT1' height='41px' nowrap>날 짜</th></tr>
+
+							<!------------------------------->
+						</THEAD>
+					</TABLE>
+				</TD>
+				<TD>
+					<DIV id=RptHeader style='OVERFLOW: hidden; WIDTH:708px'>
+						<TABLE id=TRptHeader class=Report cellSpacing=0 cellPadding=0 border=0>
+							<THEAD>
+								<!------------------------------->
+								    <tr>
+        <th colspan='2' class='RT1' nowrap>평균</th>
+        <th colspan='2' class='RT1' nowrap>최대</th>
+        <th colspan='2' class='RT1' nowrap>순간최고</th>
+        <th colspan='3' class='RT1' nowrap>기온</th>
+        <th             class='RT1' nowrap>강수</th>
+  		 <th colspan='3' class='RT1' nowrap>습도</th>
+        <th             class='RT1' nowrap>일사</th>
+        <th             class='RT1' nowrap>일조</th>
+    </tr>
+    <tr>
+        <th width='50' class='RT1' nowrap>풍속</th>
+        <th width='50' class='RT1' nowrap>풍향</th>
+        <th width='50' class='RT1' nowrap>풍속</th>
+        <th width='50' class='RT1' nowrap>풍향</th>
+        <th width='50' class='RT1' nowrap>풍속</th>
+        <th width='50' class='RT1' nowrap>풍향</th>
+        <th width='50' class='RT1' nowrap>평균</th>
+        <th width='50' class='RT1' nowrap>최저</th>
+        <th width='50' class='RT1' nowrap>최고</th>
+        <th width='50' class='RT1' nowrap>일강수</th>
+        <th width='50' class='RT1' nowrap>평균</th>
+        <th width='50' class='RT1' nowrap>최저</th>
+        <th width='50' class='RT1' nowrap>최고</th>
+        <th width='50' class='RT1' nowrap>&nbsp;</th>
+        <th width='50' class='RT1' nowrap>&nbsp;</th>
+    </tr>
+    <tr>
+        <th             class='RT1'>m/s</th>
+        <th             class='RT1'>DEG</th>
+        <th             class='RT1'>m/s</th>
+        <th             class='RT1'>DEG</th>
+        <th             class='RT1'>m/s</th>
+        <th             class='RT1'>DEG</th>
+        <th colspan='3' class='RT1'>℃ </th>
+        <th             class='RT1'>mm </th>
+        <th colspan='3' class='RT1'>%</th>
+        <th             class='RT1'>MJ/㎡</th>
+        <th             class='RT1'>hour</th>
+    </tr>
+
+								<!------------------------------->
+							</THEAD>
+						</TABLE>
+					</DIV>
+				</TD>
+			</TR>
+			<!-- REPORT LIST ------------------------------------------------------------- -->
+			<TR>
+				<TD>
+					<DIV id=RptFixed style="OVERFLOW: hidden; HEIGHT:331px">
+						<TABLE id=TRptFixed class=Report cellSpacing=0 cellPadding=0 border=0>
+							<TBODY>
+								<!------------------------------->
+								<tr><td class='RL1' align='center' nowrap>17-10-01</td></tr>
+<tr><td class='RL2' align='center' nowrap>17-10-02</td></tr>
+<tr><td class='RL1' align='center' nowrap>17-10-03</td></tr>
+<tr><td class='RL2' align='center' nowrap>17-10-04</td></tr>
+<tr><td class='RL1' align='center' nowrap>17-10-05</td></tr>
+<tr><td class='RL2' align='center' nowrap>17-10-06</td></tr>
+<tr><td class='RL1' align='center' nowrap>17-10-07</td></tr>
+<tr><td class='RL2' align='center' nowrap>17-10-08</td></tr>
+<tr><td class='RL1' align='center' nowrap>17-10-09</td></tr>
+<tr><td class='RL2' align='center' nowrap>17-10-10</td></tr>
+<tr><td class='RF1' align='center' nowrap>초순통계</td></tr>
+<tr><td class='RF2' align='center' nowrap>자료날짜<br>자료시간</td></tr>
+<tr><td class='RL1' align='center' nowrap>17-10-11</td></tr>
+<tr><td class='RL2' align='center' nowrap>17-10-12</td></tr>
+<tr><td class='RL1' align='center' nowrap>17-10-13</td></tr>
+<tr><td class='RL2' align='center' nowrap>17-10-14</td></tr>
+<tr><td class='RL1' align='center' nowrap>17-10-15</td></tr>
+<tr><td class='RL2' align='center' nowrap>17-10-16</td></tr>
+<tr><td class='RL1' align='center' nowrap>17-10-17</td></tr>
+<tr><td class='RL2' align='center' nowrap>17-10-18</td></tr>
+<tr><td class='RL1' align='center' nowrap>17-10-19</td></tr>
+<tr><td class='RL2' align='center' nowrap>17-10-20</td></tr>
+<tr><td class='RF1' align='center' nowrap>중순통계</td></tr>
+<tr><td class='RF2' align='center' nowrap>자료날짜<br>자료시간</td></tr>
+<tr><td class='RL1' align='center' nowrap>17-10-21</td></tr>
+<tr><td class='RL2' align='center' nowrap>17-10-22</td></tr>
+<tr><td class='RL1' align='center' nowrap>17-10-23</td></tr>
+<tr><td class='RL2' align='center' nowrap>17-10-24</td></tr>
+<tr><td class='RL1' align='center' nowrap>17-10-25</td></tr>
+<tr><td class='RL2' align='center' nowrap>17-10-26</td></tr>
+<tr><td class='RL1' align='center' nowrap>17-10-27</td></tr>
+<tr><td class='RL2' align='center' nowrap>17-10-28</td></tr>
+<tr><td class='RL1' align='center' nowrap>17-10-29</td></tr>
+<tr><td class='RL2' align='center' nowrap>17-10-30</td></tr>
+<tr><td class='RL1' align='center' nowrap>17-10-31</td></tr>
+<tr><td class='RF1' align='center' nowrap>하순통계</td></tr>
+<tr><td class='RF2' align='center' nowrap>자료날짜<br>자료시간</td></tr>
+
+								<!------------------------------->
+							</TBODY>
+						</TABLE>
+					</DIV>
+				</TD>
+				<TD>
+					<DIV id=RptList style="OVERFLOW-Y: scroll; OVERFLOW-X: hidden; WIDTH:725px; HEIGHT:331px" onscroll=RptScrollY()>
+						<TABLE id=TRptList class=Report cellSpacing=0 cellPadding=0 border=0>
+							<TBODY>
+								<!------------------------------->
+								<tr>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.2</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>120</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>5.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>100</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>6.8</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>107</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>18.4</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>15.6</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>21.5</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>7.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>77.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>61.8</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>92.2</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.8</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>357</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>5.5</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>348</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>7.5</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>93</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>21.8</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>15.9</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>28.7</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>4.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>68.3</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>41.1</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>92.8</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.8</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>338</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>5.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>340</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>7.1</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>335</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>19.1</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>15.8</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>23.6</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>52.4</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>42.7</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>65.2</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.7</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>12</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>4.1</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>343</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>5.8</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>82</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>17.7</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>13.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>23.3</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>49.3</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>34.7</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>62.8</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.6</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>103</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>4.2</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>84</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>5.3</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>90</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>18.6</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>14.7</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>22.5</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>63.4</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>50.5</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>72.4</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.9</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>74</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>5.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>49</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>6.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>98</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>18.8</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>16.7</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>22.2</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>69.5</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>50.6</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>89.8</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.3</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>69</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>3.8</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>136</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>6.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>132</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>21.4</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>17.2</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>26.6</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>72.5</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>53.2</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>88.8</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.1</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>190</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>3.7</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>251</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>5.1</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>329</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>23.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>20.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>27.3</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>70.4</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>50.2</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>85.3</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.2</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>232</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>3.9</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>325</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>4.6</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>250</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>22.9</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>20.3</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>27.2</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>68.5</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>35.3</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>83.1</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>152</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>3.5</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>218</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>5.3</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>186</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>21.7</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>19.2</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>24.8</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>78.5</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>63.4</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>89.1</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RF1' align='right'  nowrap>1.5</td>
+<td width='50' class='RF1' align='right'  nowrap>84</td>
+<td width='50' class='RF1' align='right'  nowrap>5.5</td>
+<td width='50' class='RF1' align='right'  nowrap>348</td>
+<td width='50' class='RF1' align='right'  nowrap>7.5</td>
+<td width='50' class='RF1' align='right'  nowrap>93</td>
+<td width='50' class='RF1' align='right'  nowrap>20.3</td>
+<td width='50' class='RF1' align='right'  nowrap>13.0</td>
+<td width='50' class='RF1' align='right'  nowrap>28.7</td>
+<td width='50' class='RF1' align='right'  nowrap>11.0</td>
+<td width='50' class='RF1' align='right'  nowrap>67.0</td>
+<td width='50' class='RF1' align='right'  nowrap>34.7</td>
+<td width='50' class='RF1' align='right'  nowrap>92.8</td>
+<td width='50' class='RF1' align='right'  nowrap>-</td>
+<td width='50' class='RF1' align='right'  nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap></td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>10-02<br>02:04</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>10-04<br>06:07</td>
+<td width='50' class='RF2' align='right'  nowrap>10-02<br>16:08</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>10-04<br>15:45</td>
+<td width='50' class='RF2' align='right'  nowrap>10-02<br>01:46</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+</tr>
+<tr>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>2.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>306</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>5.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>320</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>7.5</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>352</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>17.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>13.7</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>22.1</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>17.5</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>78.4</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>56.5</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>93.7</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.5</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>326</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>3.4</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>337</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>4.9</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>321</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>13.2</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>11.4</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>15.1</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>66.5</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>59.1</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>72.5</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.5</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>337</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>4.5</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>311</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>6.6</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>307</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>13.7</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>8.1</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>19.2</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>55.2</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>34.1</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>72.4</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.6</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>5</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>5.7</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>350</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>7.6</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>354</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>15.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>9.2</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>20.3</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>48.2</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>24.1</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>82.1</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.5</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>48</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>4.7</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>74</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>6.8</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>73</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>15.9</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>10.9</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>21.2</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>46.2</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>32.8</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>63.8</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.3</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>3</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>4.6</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>339</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>6.7</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>335</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>17.4</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>14.3</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>21.3</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>51.2</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>30.3</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>70.7</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>67</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>4.8</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>87</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>6.5</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>79</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>16.8</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>10.7</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>23.2</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>49.6</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>35.8</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>66.5</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.9</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>84</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>4.7</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>79</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>6.5</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>48</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>16.8</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>15.3</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>18.8</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>63.1</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>50.1</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>77.3</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.3</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>94</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>4.5</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>93</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>5.8</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>98</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>17.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>12.8</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>21.8</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>60.4</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>36.5</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>80.4</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.9</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>224</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>3.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>165</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>4.1</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>352</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>17.3</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>12.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>23.3</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>61.1</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>33.1</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>82.3</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RF1' align='right'  nowrap>1.5</td>
+<td width='50' class='RF1' align='right'  nowrap>16</td>
+<td width='50' class='RF1' align='right'  nowrap>5.7</td>
+<td width='50' class='RF1' align='right'  nowrap>350</td>
+<td width='50' class='RF1' align='right'  nowrap>7.6</td>
+<td width='50' class='RF1' align='right'  nowrap>354</td>
+<td width='50' class='RF1' align='right'  nowrap>16.0</td>
+<td width='50' class='RF1' align='right'  nowrap>8.1</td>
+<td width='50' class='RF1' align='right'  nowrap>23.3</td>
+<td width='50' class='RF1' align='right'  nowrap>17.5</td>
+<td width='50' class='RF1' align='right'  nowrap>58.0</td>
+<td width='50' class='RF1' align='right'  nowrap>24.1</td>
+<td width='50' class='RF1' align='right'  nowrap>93.7</td>
+<td width='50' class='RF1' align='right'  nowrap>-</td>
+<td width='50' class='RF1' align='right'  nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap></td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>10-14<br>16:06</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>10-13<br>06:17</td>
+<td width='50' class='RF2' align='right'  nowrap>10-20<br>15:46</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>10-14<br>14:43</td>
+<td width='50' class='RF2' align='right'  nowrap>10-11<br>02:50</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+</tr>
+<tr>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.1</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>54</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>4.3</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>348</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>5.8</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>70</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>17.9</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>11.4</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>24.9</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>56.6</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>27.5</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>83.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>3.1</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>58</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>9.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>61</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>13.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>70</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>16.7</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>12.2</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>21.8</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>54.6</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>41.4</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>69.7</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.4</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>44</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>4.3</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>35</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>5.9</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>73</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>14.3</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>10.7</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>18.9</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>49.3</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>34.6</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>63.8</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.1</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>151</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>3.7</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>88</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>4.5</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>84</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>14.8</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>11.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>19.8</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>55.5</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>37.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>71.1</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.1</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>221</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>3.6</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>230</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>4.5</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>323</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>14.8</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>9.6</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>20.3</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>62.5</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>33.9</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>85.6</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.8</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>154</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>2.3</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>283</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>3.2</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>309</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>14.9</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>11.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>18.8</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>61.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>40.6</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>79.1</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.8</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>123</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>2.9</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>321</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>3.9</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>65</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>17.2</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>12.5</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>23.6</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>56.9</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>30.3</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>78.5</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.9</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>251</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>3.7</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>92</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>4.9</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>315</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>17.2</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>11.4</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>24.1</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>57.6</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>36.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>74.2</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>2.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>300</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>6.6</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>318</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>10.3</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>318</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>13.3</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>8.3</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>17.8</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>52.1</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>27.3</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>75.4</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.9</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>312</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>4.9</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>345</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>7.1</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>9.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>5.3</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>12.8</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>28.0</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>21.1</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>42.6</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL2' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>1.3</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>186</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>5.1</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>331</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>6.3</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>312</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>10.3</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>3.8</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>16.3</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>0.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>56.2</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>39.0</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>77.8</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+<td width='50' class='RL1' align='right' onMouseover=RPT_HL(this,'lightblue') onMouseout=RPT_HL(this,bgColor) nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RF1' align='right'  nowrap>1.3</td>
+<td width='50' class='RF1' align='right'  nowrap>186</td>
+<td width='50' class='RF1' align='right'  nowrap>5.1</td>
+<td width='50' class='RF1' align='right'  nowrap>331</td>
+<td width='50' class='RF1' align='right'  nowrap>6.3</td>
+<td width='50' class='RF1' align='right'  nowrap>312</td>
+<td width='50' class='RF1' align='right'  nowrap>10.3</td>
+<td width='50' class='RF1' align='right'  nowrap>3.8</td>
+<td width='50' class='RF1' align='right'  nowrap>16.3</td>
+<td width='50' class='RF1' align='right'  nowrap>0.0</td>
+<td width='50' class='RF1' align='right'  nowrap>56.2</td>
+<td width='50' class='RF1' align='right'  nowrap>39.0</td>
+<td width='50' class='RF1' align='right'  nowrap>77.8</td>
+<td width='50' class='RF1' align='right'  nowrap>-</td>
+<td width='50' class='RF1' align='right'  nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap></td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>10-31<br>13:41</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>10-31<br>07:31</td>
+<td width='50' class='RF2' align='right'  nowrap>10-31<br>14:29</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>10-31<br>11:43</td>
+<td width='50' class='RF2' align='right'  nowrap>10-31<br>24:00</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+</tr>
+
+								<!------------------------------->
+							</TBODY>
+						</TABLE>
+					</DIV>
+				</TD>
+			</TR>
+			<!-- REPORT FOOTER ----------------------------------------------------------- -->
+			<TR>
+				<TD vAlign=top>
+					<TABLE class=Report cellSpacing=0 cellPadding=0 border=0>
+						<TBODY>
+							<!------------------------------->
+							<tr><td class='RF1' align='center' nowrap>기간통계</td></tr>
+<tr><td class='RF2' align='center' nowrap>자료날짜<br>자료시간</td></tr>
+
+							<!------------------------------->
+						</TBODY>
+					</TABLE>
+				</TD>
+				<TD>
+					<DIV id=RptFooter style="OVERFLOW-Y: hidden; OVERFLOW-X: scroll; WIDTH:708px" onscroll=RptScrollX()>
+						<TABLE class=Report cellSpacing=0 cellPadding=0 border=0>
+							<TBODY>
+								<!------------------------------->
+								<tr>
+<td width='50' class='RF1' align='right'  nowrap>1.4</td>
+<td width='50' class='RF1' align='right'  nowrap>54</td>
+<td width='50' class='RF1' align='right'  nowrap>9.0</td>
+<td width='50' class='RF1' align='right'  nowrap>61</td>
+<td width='50' class='RF1' align='right'  nowrap>13.0</td>
+<td width='50' class='RF1' align='right'  nowrap>70</td>
+<td width='50' class='RF1' align='right'  nowrap>16.9</td>
+<td width='50' class='RF1' align='right'  nowrap>3.8</td>
+<td width='50' class='RF1' align='right'  nowrap>28.7</td>
+<td width='50' class='RF1' align='right'  nowrap>28.5</td>
+<td width='50' class='RF1' align='right'  nowrap>59.4</td>
+<td width='50' class='RF1' align='right'  nowrap>21.1</td>
+<td width='50' class='RF1' align='right'  nowrap>93.7</td>
+<td width='50' class='RF1' align='right'  nowrap>-</td>
+<td width='50' class='RF1' align='right'  nowrap>-</td>
+</tr>
+<tr>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap></td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>10-22<br>15:11</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>10-31<br>07:31</td>
+<td width='50' class='RF2' align='right'  nowrap>10-02<br>16:08</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>10-30<br>16:57</td>
+<td width='50' class='RF2' align='right'  nowrap>10-11<br>02:50</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+<td width='50' class='RF2' align='right'  nowrap>&nbsp</td>
+</tr>
+
+								<!------------------------------->
+							</TBODY>
+						</TABLE>
+					</DIV>
+				</TD>
+			</TR>
+			<!-- REPORT ENDING ----------------------------------------------------------- -->
+		</TBODY>
+	</TABLE>
+
+</BODY>	
+
+</html>
