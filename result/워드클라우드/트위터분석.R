@@ -1,3 +1,4 @@
+# R 트위터 분석 배운 코드 그대로!!
 # twitter
 # install.packages("twitteR")
 # install.packages(c("ROAuth", "plyr", "stringr", "RJSONIO", "RCUrl", "ggplot2"))
@@ -79,7 +80,7 @@ wordcount<-table(tweet_cloud) #단어카운트
 wordcount<-gsub("민호","",wordcount) #필요없는단어 다시 삭제
 wordcount<-gsub("염력","",wordcount) #필요없는단어 다시 삭제
 #다시 파일 저장
-write(unlist(gogo),"screen_tweet.txt") 
+write(unlist(gogo),"screen_tweet.txt") # 이 파일 중요 !! 메모장에서 목록 확인 필수!!
 tweet_cloud<-read.table("screen_tweet.txt") #다시 불러오기
 wordcount<-table(tweet_cloud) #다시 table만들기
 #워드클라우드생성

@@ -1,0 +1,12 @@
+[DEFAULT]
+BASEURL=http://www.tagxedo.com/
+[DOC_twitter-widget-0]
+BASEURL=https://platform.twitter.com/widgets/tweet_button.334cd80b7ad09367efd2aa4bc8c5acf3.en.html
+ORIGURL=https://platform.twitter.com/widgets/tweet_button.334cd80b7ad09367efd2aa4bc8c5acf3.en.html#dnt=false&id=twitter-widget-0&lang=en&original_referer=http%3A%2F%2Fwww.tagxedo.com%2F&size=m&text=Make%20a%20gorgeous%20word%20cloud%20with%20your%20own%20words%20and%20shapes!%20%23tagxedo&time=1523250554105&type=share&url=http%3A%2F%2Fwww.tagxedo.com
+[{000214A0-0000-0000-C000-000000000046}]
+Prop3=19,2
+[InternetShortcut]
+URL=http://www.tagxedo.com/
+IDList=
+IconFile=http://www.tagxedo.com/favicon.ico
+IconIndex=1
