@@ -1,9 +1,11 @@
+# 동아닷컴 크롤링!!
 getwd()
 setwd("C:/Rproject")
 # install.packages("rvest")
 # install.packages("dplyr")
 library(rvest)
 library(dplyr)
+# 원하는 url 주소 basic_url 부분 삽입!!
 basic_url <- 'http://news.donga.com/search?query=공공자전거&more=1&range=3&p='
 urls <- NULL
 for(x in 0:5){
@@ -63,7 +65,7 @@ wordcount<-table(tweet_cloud) #단어카운트
 wordcount<-gsub("민호","",wordcount) #필요없는단어 다시 삭제
 wordcount<-gsub("염력","",wordcount) #필요없는단어 다시 삭제
 #다시 파일 저장
-write(unlist(gogo),"screen_tweet.txt") 
+write(unlist(gogo),"screen_tweet.txt") # 이 파일 중요!! 메모장에서 목록 확인 필수 !!
 
 tweet_cloud<-read.table("screen_tweet.txt") #다시 불러오기
 wordcount<-table(tweet_cloud) #다시 table만들기
@@ -91,3 +93,6 @@ typeof(rmyTdm$dimnames$Terms)
 
 findAssocs(rmyTdm, '자전거', 0.1)
 inspect(rmyTdm[1:20, 1:20])
+
+# 메모장에서 불러온 두 파일 목록을 합쳐서 final.txt로 저장!!
+# http://www.tagxedo.com/에서 작업하면서 마무리 !!
