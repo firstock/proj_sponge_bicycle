@@ -1,8 +1,8 @@
 from selenium import webdriver
 
-#driver= webdriver.PhantomJS('phantomjs')
-driver= webdriver.Chrome('chromedriver')
-driver.implicitly_wait(5) # 3sec for resouce load
+#driver= webdriver.PhantomJS()
+driver= webdriver.Chrome()
+#driver.implicitly_wait(5) # 3sec for resouce load
 
 driver.get('https://kor.tellburgerking.com/')
 driver.find_element_by_xpath('//*[@id="NextButton"]').click()
