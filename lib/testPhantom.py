@@ -1,7 +1,7 @@
 from selenium import webdriver
 
-#driver= webdriver.PhantomJS()
-driver= webdriver.Chrome()
+driver= webdriver.PhantomJS()
+#driver= webdriver.Chrome()
 #driver.implicitly_wait(5) # 3sec for resouce load
 
 driver.get('https://kor.tellburgerking.com/')
