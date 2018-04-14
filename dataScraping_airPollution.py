@@ -11,6 +11,7 @@ from os import rename
 from os import listdir
 
 import time
+
 def setDownPath():
     """
     @return chrome_options
@@ -22,6 +23,7 @@ def setDownPath():
     options.add_experimental_option("prefs",prefs)
     
     return options
+
 def startWeb():
     """
     @return driver
@@ -32,17 +34,21 @@ def startWeb():
     driver.get(url)
     
     return driver
+
 def set_input(xpath_id, sendKeys):
     myXpath= '//input[@id="'+xpath_id+'"]'
     element= driver.find_element_by_xpath(myXpath)
     element.clear()
     element.send_keys(sendKeys)
+
 def set_input_year(year):
     set_input("measure_cal1", year)
     set_input("measure_cal2", year)
+
 def clickSearchBtn(driver):
     element= driver.find_element_by_xpath('//p[@class="schBtn1"]')
     element.click()
+
 def clickExcelDownBtn(driver):
     try:
         element= WebDriverWait(driver, 10).until(
@@ -53,6 +59,7 @@ def clickExcelDownBtn(driver):
 
     element.click()
     time.sleep(4)
+
 def renameDownFile(year):
     for filename in listdir('data/'):
         if EXCEL_FILENAME == filename:
