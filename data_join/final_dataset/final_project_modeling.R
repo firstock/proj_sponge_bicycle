@@ -1,6 +1,6 @@
 getwd()
 setwd("C:\\github\\proj_sponge_bicycle\\data_join\\totalByArea")
-# data <- read.csv("광진구.csv", header = T)
+data <- read.csv("광진구.csv", header = T)
 # data <- read.csv("동대문구.csv", header = T)
 # data <- read.csv("마포구.csv", header = T)
 # data <- read.csv("서대문구.csv", header = T)
@@ -10,11 +10,11 @@ setwd("C:\\github\\proj_sponge_bicycle\\data_join\\totalByArea")
 # data <- read.csv("용산구.csv", header = T)
 # data <- read.csv("은평구.csv", header = T)
 # data <- read.csv("종로구.csv", header = T)
-data <- read.csv("중구.csv", header = T)
+# data <- read.csv("중구.csv", header = T)
 
 dim(data);head(data)
 data <- data[, 3:26]
-data <- data[,c(1:15, 17, 18, 23, 24)]
+data <- data[,c(1:15, 17, 18, 22, 23)]
 str(data)
 data <- data.frame(scale(data, scale = T, center = T))
 head(data);str(data);dim(data)
@@ -29,7 +29,7 @@ x <- data[,2:19]
 y <- data[,1]
 fit.lasso <- glmnet(as.matrix(x), y, family = "gaussian", alpha = 1)
 cv.lasso <- cv.glmnet(as.matrix(x), y, nfolds = 10, family = "gaussian", alpha = 1, lambda = fit.lasso$lambda)
-plot(cv.lasso)
+plot(cv.lasso, main = "Tuning parameter for Lasso")
 abline(v=log(cv.lasso$lambda.min), col="red")
 abline(v=log(cv.lasso$lambda.1se), col="blue")
 legend("topleft", legend = c("log(lambda.min)", "log(lambda.1se)"), col=c("red", "blue"), lwd = 2)
@@ -47,7 +47,7 @@ sqrt(mean(lasso.error^2)) # RMSE of Lasso
 # Ridge for 10-fold cross-validation
 fit.ridge <- glmnet(as.matrix(x), y, family = "gaussian", alpha = 0)
 cv.ridge <- cv.glmnet(as.matrix(x), y, nfolds = 10, family = "gaussian", alpha = 0, lambda = fit.ridge$lambda)
-plot(cv.ridge)
+plot(cv.ridge, main = "Tuning parameter for Ridge")
 abline(v=log(cv.ridge$lambda.min), col="red")
 abline(v=log(cv.ridge$lambda.1se), col="blue")
 legend("bottomright", legend = c("log(lambda.min)", "log(lambda.1se)"), col=c("red", "blue"), lwd = 2)
@@ -65,10 +65,10 @@ sqrt(mean(ridge.error^2)) # RMSE of Ridge
 # Elastic Net for 10-fold cross-validation
 fit.elastic <- glmnet(as.matrix(x), y, family = "gaussian", alpha = .5)
 cv.elastic <- cv.glmnet(as.matrix(x), y, nfolds = 10, family = "gaussian", alpha = .5, lambda = fit.elastic$lambda)
-plot(cv.elastic)
+plot(cv.elastic, main = "Tuning parameter for Elastic Net")
 abline(v=log(cv.elastic$lambda.min), col="red")
 abline(v=log(cv.elastic$lambda.1se), col="blue")
-legend("bottomright", legend = c("log(lambda.min)", "log(lambda.1se)"), col=c("red", "blue"), lwd = 2)
+legend("topleft", legend = c("log(lambda.min)", "log(lambda.1se)"), col=c("red", "blue"), lwd = 2)
 
 fit.elastic.param <- cv.elastic$lambda.min
 # fit.elastic.param <- cv.elastic$lambda.1se
@@ -122,11 +122,10 @@ for(j in 1:K){
 }
 list(cv.RMSE, mean(cv.RMSE)) # RMSE of decision tree
 
-par(mfrow=c(1,2))
 cv.fit.tree <- cv.tree(fit.tree, K = 10)
 names(cv.fit.tree)
 plot(cv.fit.tree$size, cv.fit.tree$dev, type = "b", main = "Optimal Tree Size")
-prune.fit.tree <- prune.tree(fit.tree, best = 8)
+prune.fit.tree <- prune.tree(fit.tree, best = 11)
 prune.fit.tree
 plot(prune.fit.tree)
 text(prune.fit.tree)
