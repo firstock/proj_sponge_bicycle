@@ -195,7 +195,7 @@ def getContent(link):
 
 if not os.path.exists('data'):
     mkdir("data")
-    
+
 # driver.close()
 # driver.quit()
 # TEST: link list from page-1
